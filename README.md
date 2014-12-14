@@ -39,7 +39,8 @@ make generate
 #### .(locale, number)
 
 Returns form name for given number. Number can be passed as string to keep
-tailing decimal zeros.
+tailing decimal zeros. If locale not supported, returns `null`.
+
 
 ```js
 var plural = require('plural-cldr');
@@ -61,7 +62,8 @@ plural('ru', 0.5) // -> 'other'
 
 #### .forms(locale)
 
-Returns array of available forms for specified locale.
+Returns array of available forms for specified locale. If locale not supported,
+returns `null`.
 
 
 #### .indexOf(locale, number)
@@ -69,6 +71,8 @@ Returns array of available forms for specified locale.
 Returns index of form for specified locale. That's convenient, if you wish
 to implement lookup from compact ordered list, like
 [babelfish](https://github.com/nodeca/babelfish/) does.
+
+If locale not supported, function returns `-1`.
 
 Order of forms is the same for all languages: `zero`, `one`, `two`, `few`,
 `many`, `other`. Remove unavailable forms, and you will get indexes of each.
