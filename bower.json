@@ -22,7 +22,7 @@
     "node_modules",
     "bower_components",
     "test",
-    "support"
+    "support",
     "Makefile",
     "index*",
     "lib",
