@@ -3,6 +3,7 @@ plurals-cldr - plurals support for JS
 
 [![Build Status](https://travis-ci.org/nodeca/plurals-cldr.svg?branch=master)](https://travis-ci.org/nodeca/plurals-cldr)
 [![NPM version](https://img.shields.io/npm/v/plurals-cldr.svg)](https://www.npmjs.org/package/plurals-cldr)
+[![Coverage Status](https://img.shields.io/coveralls/nodeca/plurals-cldr.svg)](https://coveralls.io/r/nodeca/plurals-cldr)
 
 Key benefits:
 
