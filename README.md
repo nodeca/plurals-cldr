@@ -40,7 +40,7 @@ make generate
 Returns form name for given number. Number can be passed as string to keep
 tailing decimal zeros.
 
-```
+```js
 var plural = require('plural-cldr');
 
 // Get cardinal form name
@@ -55,6 +55,7 @@ plural('ru', 1)   // -> 'one'
 plural('ru', 2)   // -> 'few'
 plural('ru', 19)  // -> 'many'
 plural('ru', 0.5) // -> 'other'
+```
 
 
 #### .forms(locale)
@@ -69,12 +70,19 @@ to implement lookup from compact ordered list, like
 [babelfish](https://github.com/nodeca/babelfish/) does.
 
 Order of forms is the same for all languages: `zero`, `one`, `two`, `few`,
-`many`, `other`.
+`many`, `other`. Remove unavailable forms, and you will get indexes of each.
 
 
 #### .ordinal(), .ordinal.forms(), ordinal.indexOf()
 
 The same as above, but for ordinal forms.
+
+
+### References
+
+1. [CLDR downloads](http://cldr.unicode.org/index/downloads)
+2. [Latest chart](http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html)
+3. [Syntax description](http://www.unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules)
 
 
 ### License
