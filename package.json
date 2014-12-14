@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "cldr-data": "*",
+    "istanbul": "*",
     "eslint": "0.10.2",
     "eslint-plugin-nodeca": "~1.0.3",
     "lodash": "*",

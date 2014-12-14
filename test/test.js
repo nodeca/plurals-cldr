@@ -10,7 +10,15 @@ var p = require('../');
 
 var tests = require('./test_data.json');
 
+
+// Autogenerate tests for cardinal forms from parsed fixtures
 describe('cardinals', function () {
+
+  // Add values to cover missed branches
+  tests.cardinal.lv.zero.push('3.14');
+  tests.cardinal.lv.one.push('3.21');
+
+  // Walk on fixtures
   _.forEach(tests.cardinal, function (forms, loc) {
     describe(loc, function () {
       _.forEach(forms, function (samples, form) {
@@ -33,7 +41,14 @@ describe('cardinals', function () {
   });
 });
 
+
+// Autogenerate tests for ordinal forms from parsed fixtures
 describe('ordinals', function () {
+
+  // Add dummy value to trigger unused (and uncovered) brances
+  tests.ordinal.en.other.push('3.1415');
+
+  // Walk on fixtures
   _.forEach(tests.ordinal, function (forms, loc) {
     describe(loc, function () {
       _.forEach(forms, function (samples, form) {
@@ -53,5 +68,23 @@ describe('ordinals', function () {
         });
       });
     });
+  });
+});
+
+
+describe('api', function () {
+  it('should return error value on invalid locales', function () {
+    assert.strictEqual(p('bad_locale', 2), null);
+    assert.strictEqual(p.ordinal('bad_locale', 2), null);
+    assert.strictEqual(p.forms('bad_locale'), null);
+    assert.strictEqual(p.ordinal.forms('bad_locale'), null);
+    assert.strictEqual(p.indexOf('bad_locale', 2), -1);
+    assert.strictEqual(p.ordinal.indexOf('bad_locale', 2), -1);
+  });
+
+  it('should normalize locales', function () {
+    assert.deepEqual(p.forms('pt-PT'), [ 'one', 'other' ]);
+    assert.deepEqual(p.forms('pt-PPPP'), [ 'one', 'other' ]);
+    assert.deepEqual(p.forms('pt_PPPP'), [ 'one', 'other' ]);
   });
 });

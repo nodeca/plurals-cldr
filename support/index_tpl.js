@@ -16,7 +16,7 @@ var s = {};
 function normalize(loc) {
   var l;
   if (s[loc]) { return loc; }
-  l = loc.toLowerCase();
+  l = loc.toLowerCase().replace('_', '-');
   if (s[l]) { return l; }
   l = l.split('-')[0];
   if (s[l]) { return l; }

@@ -17,6 +17,9 @@ lint:
 test: lint
 	./node_modules/.bin/mocha
 
+coverage:
+	rm -rf coverage
+	./node_modules/.bin/istanbul cover node_modules/.bin/_mocha
 
 clean:
 	rm -rf ./node_modules/cldr-data
@@ -58,5 +61,5 @@ publish:
 	npm publish https://github.com/${GITHUB_PROJ}/tarball/${NPM_VERSION}
 
 
-.PHONY: lint test todo generate browserify
+.PHONY: lint test todo generate browserify coverage
 .SILENT: lint test todo
