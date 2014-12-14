@@ -1,0 +1,40 @@
+{
+  "name": "plurals-cldr",
+  "version": "1.0.0",
+  "description": "Plurals suport, generated from CLDR.",
+  "keywords": [
+    "i18n",
+    "l10n",
+    "plural",
+    "plurals",
+    "pluralize",
+    "clrd",
+    "ldml"
+  ],
+  "homepage": "https://github.com/nodeca/babelfish",
+  "author": "Vitaly Puzrin (https://github.com/puzrin)",
+  "bugs": {
+    "url": "https://github.com/nodeca/plurals-cldr/issues"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/nodeca/plurals-cldr/blob/master/LICENSE"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nodeca/plurals-cldr.git"
+  },
+  "main": "./index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "devDependencies": {
+    "cldr-data": "*",
+    "eslint": "0.10.2",
+    "eslint-plugin-nodeca": "~1.0.3",
+    "lodash": "*",
+    "mocha": "*",
+    "browserify": "*",
+    "uglify-js": "*"
+  }
+}
