@@ -92,4 +92,4 @@ The same as above, but for ordinal forms.
 
 ### License
 
-[Mit](https://github.com/nodeca/plurals-cldr.tools/blob/master/LICENSE).
+[Mit](https://github.com/nodeca/plurals-cldr/blob/master/LICENSE).
