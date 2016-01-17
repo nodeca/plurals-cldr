@@ -168,7 +168,7 @@ function createLocaleFn(rules) {
     return condition.indexOf(p) < 0 ? -1 : idx;
   })) + 1;
 
-  var fn = _.template(FN_TPL, {
+  var fn = _.template(FN_TPL)({
     params: 'nivftw'.slice(0, pmax).split('').join(', '),
     shortcuts: shortcuts,
     condition: condition
@@ -252,8 +252,8 @@ reduced = _.map(reduced, function(set) { return set; });
 var ADD_TPL   = fs.readFileSync(path.join(__dirname, 'add.tpl'), 'utf8');
 var INDEX_TPL = fs.readFileSync(path.join(__dirname, 'index_tpl.js'), 'utf8');
 
-var generated = _.template(INDEX_TPL, { version: version })
-                    .replace('/*** RULES ***/', _.template(ADD_TPL, { set: reduced }));
+var generated = _.template(INDEX_TPL)({ version: version })
+                    .replace('/*** RULES ***/', _.template(ADD_TPL)({ set: reduced }));
 
 fs.writeFileSync(path.resolve(__dirname, '../index.js'), generated);
 fs.writeFileSync(path.resolve(__dirname, '../test/test_data.json'), JSON.stringify(test, null, 2));
