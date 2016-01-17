@@ -1,6 +1,6 @@
 {
   "name": "plurals-cldr",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Plurals suport, generated from CLDR.",
   "keywords": [
     "i18n",
@@ -12,20 +12,13 @@
     "clrd",
     "ldml"
   ],
-  "homepage": "https://github.com/nodeca/babelfish",
   "author": "Vitaly Puzrin (https://github.com/puzrin)",
-  "bugs": {
-    "url": "https://github.com/nodeca/plurals-cldr/issues"
-  },
-  "license": {
-    "type": "MIT",
-    "url": "https://github.com/nodeca/plurals-cldr/blob/master/LICENSE"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nodeca/plurals-cldr.git"
-  },
-  "main": "./index.js",
+  "license": "MIT",
+  "repository": "nodeca/plurals-cldr",
+  "files": [
+    "index.js",
+    "dist/"
+  ],
   "scripts": {
     "test": "make test"
   },
