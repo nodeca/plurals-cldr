@@ -31,9 +31,9 @@ function renameKeys(rules) {
 
 // Create array of sample values for single range
 // 5~16, 0.04~0.09. Both string & integer forms (when possible)
-function fillRange(val) {
-  var start = val.split('~')[0];
-  var end   = val.split('~')[1];
+function fillRange(value) {
+  var start = value.split('~')[0];
+  var end   = value.split('~')[1];
 
   var decimals = (start.split('.')[1] || '').length;
   var mult = Math.pow(10, decimals);
@@ -48,7 +48,7 @@ function fillRange(val) {
 
   // Stupid self check
   if (+end !== +last) {
-    throw new Error(format('Range create error for %s: last value is %s', val, last));
+    throw new Error(format('Range create error for %s: last value is %s', value, last));
   }
 
   // Now we have array of string samples. Add integers when possible.
@@ -67,22 +67,24 @@ function fillRange(val) {
 // Create array of test values for @integer or @decimal
 function createSamples(src) {
   var result = [];
+
   src
-      .replace(/…/, '')
-      .trim()
-      .replace(/,$/, '')
-      .split(',')
-      .map(function (val) { return val.trim(); })
-      .forEach(function (val) {
-    if (val.indexOf('~') !== -1) {
-      result = result.concat(fillRange(val));
-    } else {
-      // push test data as String
-      result.push(val);
-      // push test data as Number if the same
-      if (String(+val) === val) { result.push(+val); }
-    }
-  });
+    .replace(/…/, '')
+    .trim()
+    .replace(/,$/, '')
+    .split(',')
+    .map(function (val) { return val.trim(); })
+    .forEach(function (val) {
+      if (val.indexOf('~') !== -1) {
+        result = result.concat(fillRange(val));
+      } else {
+        // push test data as String
+        result.push(val);
+        // push test data as Number if the same
+        if (String(+val) === val) { result.push(+val); }
+      }
+    });
+
   return result;
 }
 
@@ -139,7 +141,7 @@ function createLocaleFn(rules) {
   });
 
   // Make sure existing forms are ordered
-  var forms = Object.keys(rules).sort(function(a, b) {
+  var forms = Object.keys(rules).sort(function (a, b) {
     return FORMS.indexOf(a) > FORMS.indexOf(b);
   });
 
@@ -245,7 +247,7 @@ _.forEach(compiled, function (data, loc) {
   }
 });
 
-reduced = _.map(reduced, function(set) { return set; });
+reduced = _.map(reduced, function (set) { return set; });
 
 
 // Write code & fixture

@@ -10,6 +10,7 @@ var p = require('../');
 
 var tests = require('./test_data.json');
 
+/* eslint-disable max-nested-callbacks */
 
 // Autogenerate tests for cardinal forms from parsed fixtures
 describe('cardinals', function () {
