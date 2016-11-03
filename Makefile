@@ -1,11 +1,6 @@
 NPM_PACKAGE := $(shell node -e 'console.log(require("./package.json").name)')
 NPM_VERSION := $(shell node -e 'console.log(require("./package.json").version)')
 
-TMP_PATH    := /tmp/${NPM_PACKAGE}-$(shell date +%s)
-
-REMOTE_NAME ?= origin
-REMOTE_REPO ?= $(shell git config --get remote.${REMOTE_NAME}.url)
-
 CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | cut --bytes=-6) master)
 GITHUB_PROJ := nodeca/${NPM_PACKAGE}
 
@@ -17,16 +12,20 @@ lint:
 test: lint
 	./node_modules/.bin/mocha
 
+
 coverage:
 	rm -rf coverage
 	./node_modules/.bin/istanbul cover node_modules/.bin/_mocha
 
+
 test-ci: lint
 	./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
+
 
 clean:
 	rm -rf ./node_modules/cldr-data
 	npm install
+
 
 generate:
 	./support/generate.js
@@ -34,15 +33,16 @@ generate:
 	make browserify
 	@echo "GENERATION COMPLETE!"
 
+
 browserify:
 	rm -rf ./dist
 	mkdir dist
 	# Browserify
 	( printf "/* ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} */" ; \
-		browserify -r ./ -s "plurals-cldr" \
+		./node_modules/.bin/browserify -r ./ -s "plurals-cldr" \
 		) > dist/plurals-cldr.js
 	# Minify
-	uglifyjs dist/plurals-cldr.js -c -m \
+	./node_modules/.bin/uglifyjs dist/plurals-cldr.js -c -m \
 		--preamble "/* ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} */" \
 		> dist/plurals-cldr.min.js
 
