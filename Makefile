@@ -1,7 +1,7 @@
 NPM_PACKAGE := $(shell node -e 'console.log(require("./package.json").name)')
 NPM_VERSION := $(shell node -e 'console.log(require("./package.json").version)')
 
-CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | cut --bytes=-6) master)
+# CURR_HEAD   := $(firstword $(shell git show-ref --hash HEAD | cut --bytes=-6) master)
 GITHUB_PROJ := nodeca/${NPM_PACKAGE}
 
 
