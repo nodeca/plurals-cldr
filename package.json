@@ -1,6 +1,6 @@
 {
   "name": "plurals-cldr",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Plurals suport, generated from CLDR.",
   "keywords": [
     "i18n",
