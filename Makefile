@@ -42,8 +42,8 @@ browserify:
 		./node_modules/.bin/browserify -r ./ -s "plurals-cldr" \
 		) > dist/plurals-cldr.js
 	# Minify
-	./node_modules/.bin/uglifyjs dist/plurals-cldr.js -c -m \
-		--preamble "/* ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} */" \
+	./node_modules/.bin/terser dist/plurals-cldr.js -c -m \
+		-b beautify=false,preamble="'/* ${NPM_PACKAGE} ${NPM_VERSION} ${GITHUB_PROJ} */'" \
 		> dist/plurals-cldr.min.js
 
 
