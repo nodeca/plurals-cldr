@@ -2,19 +2,18 @@
 
 'use strict';
 
-var fs     = require('fs');
-var format = require('util').format;
-var path   = require('path');
+const fs     = require('fs');
+const path   = require('path');
 
-var _    = require('lodash');
-var cldr = require('cldr-data');
+const _    = require('lodash');
+const cldr = require('cldr-data');
 
-var cardinals = cldr('supplemental/plurals');
-var ordinals  = cldr('supplemental/ordinals');
+const cardinals = cldr('supplemental/plurals');
+const ordinals  = cldr('supplemental/ordinals');
 
-var version   = cardinals.supplemental.version;
+const version   = cardinals.supplemental.version;
 
-var FORMS = [ 'zero', 'one', 'two', 'few', 'many', 'other' ];
+const FORMS = [ 'zero', 'one', 'two', 'few', 'many', 'other' ];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -22,8 +21,8 @@ var FORMS = [ 'zero', 'one', 'two', 'few', 'many', 'other' ];
 // Strip key prefixes to get clear names: zero / one / two / few / many / other
 //
 function renameKeys(rules) {
-  var result = {};
-  Object.keys(rules).forEach(function (k) {
+  let result = {};
+  Object.keys(rules).forEach(k => {
     result[k.match(/[^-]+$/)] = rules[k];
   });
   return result;
@@ -32,29 +31,27 @@ function renameKeys(rules) {
 // Create array of sample values for single range
 // 5~16, 0.04~0.09. Both string & integer forms (when possible)
 function fillRange(value) {
-  var start = value.split('~')[0];
-  var end   = value.split('~')[1];
+  let start = value.split('~')[0];
+  let end   = value.split('~')[1];
 
-  var decimals = (start.split('.')[1] || '').length;
-  var mult = Math.pow(10, decimals);
+  let decimals = (start.split('.')[1] || '').length;
+  let mult = Math.pow(10, decimals);
 
-  var range = _.range(start * mult, end * mult + 1)
+  let range = _.range(start * mult, end * mult + 1)
     // round errors to required decimal precision
-    .map(function (val) {
-      return (val / mult).toFixed(decimals);
-    });
+    .map(val => (val / mult).toFixed(decimals));
 
-  var last = range[range.length - 1];
+  let last = range[range.length - 1];
 
   // Stupid self check
   if (+end !== +last) {
-    throw new Error(format('Range create error for %s: last value is %s', value, last));
+    throw new Error(`Range create error for ${value}: last value is ${last}`);
   }
 
   // Now we have array of string samples. Add integers when possible.
-  var result = [];
+  let result = [];
 
-  range.forEach(function (val) {
+  range.forEach(val => {
     // push test data as String
     result.push(val);
     // push test data as Number if the same
@@ -66,7 +63,7 @@ function fillRange(value) {
 
 // Create array of test values for @integer or @decimal
 function createSamples(src) {
-  var result = [];
+  let result = [];
 
   src
     .replace(/…/, '')
@@ -74,7 +71,7 @@ function createSamples(src) {
     .replace(/,$/, '')
     .split(',')
     .map(function (val) { return val.trim(); })
-    .forEach(function (val) {
+    .forEach(val => {
       if (val.indexOf('~') !== -1) {
         result = result.concat(fillRange(val));
       } else {
@@ -95,32 +92,29 @@ function toSingleRule(str) {
     // replace modulus with shortcuts
     .replace(/([nivwft]) % (\d+)/g, '$1$2')
     // replace ranges
-    .replace(/([nivwft]\d*) (=|\!=) (\d+[.,][.,\d]+)/g, function (match, v, cond, range) {
+    .replace(/([nivwft]\d*) (=|\!=) (\d+[.,][.,\d]+)/g, (match, v, cond, range) => {
       // range = 5,8,9 (simple set)
       if (range.indexOf('..') < 0 && range.indexOf(',') >= 0) {
         if (cond === '=') {
-          return format('IN([ %s ], %s)', range.split(',').join(', '), v);
+          return `IN([ ${range.split(',').join(', ')} ], ${v})`;
         }
-        return format('!IN([ %s ], %s)', range.split(',').join(', '), v);
+        return `!IN([ ${range.split(',').join(', ')} ], ${v})`;
       }
       // range = 0..5 or 0..5,8..20 or 0..5,8
-      var conditions = range.split(',').map(function (interval) {
+      let conditions = range.split(',').map(interval => {
         // simple value
-        if (interval.indexOf('..') < 0) {
-          return format('%s %s %s', v, cond, interval);
-        }
+        if (interval.indexOf('..') < 0) return `${v} ${cond} ${interval}`;
         // range
-        var start = interval.split('..')[0],
+        let start = interval.split('..')[0],
             end   = interval.split('..')[1];
-        if (cond === '=') {
-          return format('B(%s, %s, %s)', start, end, v);
-        }
-        return format('!B(%s, %s, %s)', start, end, v);
+        if (cond === '=') return `B(${start}, ${end}, ${v})`;
+
+        return `!B(${start}, ${end}, ${v})`;
       });
 
-      var joined;
+      let joined;
       if (conditions.length > 1) {
-        joined =  '(' + conditions.join(cond === '=' ? ' || ' : ' && ') + ')';
+        joined =  `(${conditions.join(cond === '=' ? ' || ' : ' && ')})`;
       } else {
         joined = conditions[0];
       }
@@ -132,65 +126,59 @@ function toSingleRule(str) {
     .replace(/ and /g, ' && ');
 }
 
-var FN_TPL   = fs.readFileSync(path.join(__dirname, 'fn.tpl'), 'utf8');
+const FN_TPL   = fs.readFileSync(path.join(__dirname, 'fn.tpl'), 'utf8');
 
 function createLocaleFn(rules) {
 
-  Object.keys(rules).forEach(function (r) {
+  Object.keys(rules).forEach(r => {
     if (FORMS.indexOf(r) < 0) { throw new Error("Don't know this form: "); }
   });
 
   // Make sure existing forms are ordered
-  var forms = Object.keys(rules).sort(function (a, b) {
-    return FORMS.indexOf(a) > FORMS.indexOf(b);
-  });
+  let forms = Object.keys(rules).sort((a, b) => FORMS.indexOf(a) > FORMS.indexOf(b));
 
-  if (forms.length === 1) {
-    return {};
-  }
+  if (forms.length === 1) return {};
 
-  var condition = '';
+  let condition = '';
 
   forms.forEach(function (form, idx) {
     if (form === 'other') {
       condition += idx;
       return;
     }
-    var rule = rules[form].split('@')[0].trim();
-    condition += toSingleRule(rule) + ' ? ' + idx + ' : ';
+    let rule = rules[form].split('@')[0].trim();
+    condition += `${toSingleRule(rule)} ? ${idx} : `;
   });
 
-  var shortcuts = _.uniq(condition.match(/[nivwft]\d+/g) || [])
-    .map(function (sh) {
-      return format('%s = %s % %s', sh, sh[0], sh.slice(1));
-    })
+  let shortcuts = _.uniq(condition.match(/[nivwft]\d+/g) || [])
+    .map(sh => `${sh} = ${sh[0]} % ${sh.slice(1)}`)
     .join(', ');
 
-  var pmax = _.max('nivftw'.split('').map(function (p, idx) {
-    return condition.indexOf(p) < 0 ? -1 : idx;
-  })) + 1;
+  let pmax = _.max(
+    'nivftw'.split('').map((p, idx) => condition.indexOf(p) < 0 ? -1 : idx)
+  ) + 1;
 
-  var fn = _.template(FN_TPL)({
+  let fn = _.template(FN_TPL)({
     params: 'nivftw'.slice(0, pmax).split('').join(', '),
     shortcuts: shortcuts,
     condition: condition
   });
 
   return {
-    c:   forms.map(function (f) { return FORMS.indexOf(f); }),
+    c:   forms.map(f => FORMS.indexOf(f)),
     cFn: fn
   };
 }
 
 // Create fixtures for single locale rules
 function createLocaleTest(rules) {
-  var result = {};
+  let result = {};
 
-  Object.keys(rules).forEach(function (form) {
-    var samples = rules[form].split(/@integer|@decimal/).slice(1);
+  Object.keys(rules).forEach(form => {
+    let samples = rules[form].split(/@integer|@decimal/).slice(1);
 
     result[form] = [];
-    samples.forEach(function (sample) {
+    samples.forEach(sample => {
       result[form] = result[form].concat(createSamples(sample));
     });
   });
@@ -201,25 +189,25 @@ function createLocaleTest(rules) {
 ////////////////////////////////////////////////////////////////////////////////
 
 // Process all locales
-var compiled = {};
-var test = {
+let compiled = {};
+let test = {
   cardinal: {},
   ordinal: {}
 };
 
 // Parse plural rules
-_.forEach(cardinals.supplemental['plurals-type-cardinal'], function (ruleset, loc) {
-  var rules = renameKeys(ruleset);
+_.forEach(cardinals.supplemental['plurals-type-cardinal'], (ruleset, loc) => {
+  let rules = renameKeys(ruleset);
 
   compiled[loc.toLowerCase()] = createLocaleFn(rules);
   test.cardinal[loc.toLowerCase()] = createLocaleTest(rules);
 });
 
 // Parse ordinal rules
-_.forEach(ordinals.supplemental['plurals-type-ordinal'], function (ruleset, loc) {
-  var rules = renameKeys(ruleset);
+_.forEach(ordinals.supplemental['plurals-type-ordinal'], (ruleset, loc) => {
+  let rules = renameKeys(ruleset);
 
-  var res = createLocaleFn(rules);
+  let res = createLocaleFn(rules);
 
   if (res.c) {
     compiled[loc.toLowerCase()].o = res.c;
@@ -231,11 +219,11 @@ _.forEach(ordinals.supplemental['plurals-type-ordinal'], function (ruleset, loc)
 
 
 // Collapse locales with the same rules
-var reduced = {};
+let reduced = {};
 
-_.forEach(compiled, function (data, loc) {
+_.forEach(compiled, (data, loc) => {
   // calculate unique key;
-  var uniq = data.cFn + data.oFn;
+  let uniq = data.cFn + data.oFn;
 
   if (!reduced[uniq]) {
     reduced[uniq] = {
@@ -247,14 +235,14 @@ _.forEach(compiled, function (data, loc) {
   }
 });
 
-reduced = _.map(reduced, function (set) { return set; });
+reduced = _.map(reduced,  set => set);
 
 
 // Write code & fixture
-var ADD_TPL   = fs.readFileSync(path.join(__dirname, 'add.tpl'), 'utf8');
-var INDEX_TPL = fs.readFileSync(path.join(__dirname, 'index_tpl.js'), 'utf8');
+const ADD_TPL   = fs.readFileSync(path.join(__dirname, 'add.tpl'), 'utf8');
+const INDEX_TPL = fs.readFileSync(path.join(__dirname, 'index_tpl.js'), 'utf8');
 
-var generated = _.template(INDEX_TPL)({ version: version })
+let generated = _.template(INDEX_TPL)({ version: version })
   .replace('/*** RULES ***/', _.template(ADD_TPL)({ set: reduced }));
 
 fs.writeFileSync(path.resolve(__dirname, '../index.js'), generated);
