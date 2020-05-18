@@ -39,10 +39,10 @@ function fillRange(value) {
   var mult = Math.pow(10, decimals);
 
   var range = _.range(start * mult, end * mult + 1)
-                  // round errors to required decimal precision
-                  .map(function (val) {
-                    return (val / mult).toFixed(decimals);
-                  });
+    // round errors to required decimal precision
+    .map(function (val) {
+      return (val / mult).toFixed(decimals);
+    });
 
   var last = range[range.length - 1];
 
@@ -161,10 +161,10 @@ function createLocaleFn(rules) {
   });
 
   var shortcuts = _.uniq(condition.match(/[nivwft]\d+/g) || [])
-                      .map(function (sh) {
-                        return format('%s = %s % %s', sh, sh[0], sh.slice(1));
-                      })
-                      .join(', ');
+    .map(function (sh) {
+      return format('%s = %s % %s', sh, sh[0], sh.slice(1));
+    })
+    .join(', ');
 
   var pmax = _.max('nivftw'.split('').map(function (p, idx) {
     return condition.indexOf(p) < 0 ? -1 : idx;
@@ -255,7 +255,7 @@ var ADD_TPL   = fs.readFileSync(path.join(__dirname, 'add.tpl'), 'utf8');
 var INDEX_TPL = fs.readFileSync(path.join(__dirname, 'index_tpl.js'), 'utf8');
 
 var generated = _.template(INDEX_TPL)({ version: version })
-                    .replace('/*** RULES ***/', _.template(ADD_TPL)({ set: reduced }));
+  .replace('/*** RULES ***/', _.template(ADD_TPL)({ set: reduced }));
 
 fs.writeFileSync(path.resolve(__dirname, '../index.js'), generated);
 fs.writeFileSync(path.resolve(__dirname, '../test/test_data.json'), JSON.stringify(test, null, 2));
