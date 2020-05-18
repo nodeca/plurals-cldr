@@ -1,14 +1,12 @@
 'use strict';
 
-/*global describe, it*/
+/* eslint-env mocha,es6 */
 
-var assert = require('assert');
-var format = require('util').format;
+const assert = require('assert');
 
-var _ = require('lodash');
-var p = require('../');
+const p = require('../');
 
-var tests = require('./test_data.json');
+const tests = require('./test_data.json');
 
 /* eslint-disable max-nested-callbacks */
 
@@ -20,21 +18,21 @@ describe('cardinals', function () {
   tests.cardinal.lv.one.push('3.21');
 
   // Walk on fixtures
-  _.forEach(tests.cardinal, function (forms, loc) {
+  Object.entries(tests.cardinal).forEach(([ loc, forms ]) => {
     describe(loc, function () {
-      _.forEach(forms, function (samples, form) {
+      Object.entries(forms).forEach(([ form, samples ]) => {
         it(form, function () {
-          _.forEach(samples, function (sample) {
-            var result, f_idx;
+          samples.forEach(sample => {
+            let result, f_idx;
 
             result = p(loc, sample);
             assert.equal(result, form,
-              format('FORM FAILED: input = %s, returned [%s] instead of [%s]', sample, result, form));
+              `FORM FAILED: input = ${sample}, returned [${result}] instead of [${form}]`);
 
             result = p.indexOf(loc, sample);
             f_idx  = p.forms(loc).indexOf(form);
             assert.equal(result, f_idx,
-              format('INDEX FAILED: input = %s, returned [%s] instead of [%s]', sample, result, f_idx));
+              `INDEX FAILED: input = ${sample}, returned [${result}] instead of [${f_idx}]`);
           });
         });
       });
@@ -50,21 +48,21 @@ describe('ordinals', function () {
   tests.ordinal.en.other.push('3.1415');
 
   // Walk on fixtures
-  _.forEach(tests.ordinal, function (forms, loc) {
+  Object.entries(tests.ordinal).forEach(([ loc, forms ]) => {
     describe(loc, function () {
-      _.forEach(forms, function (samples, form) {
+      Object.entries(forms).forEach(([ form, samples ]) => {
         it(form, function () {
-          _.forEach(samples, function (sample) {
-            var result, f_idx;
+          samples.forEach(sample => {
+            let result, f_idx;
 
             result = p.ordinal(loc, sample);
             assert.equal(result, form,
-              format('FORM FAILED: input = %s, returned [%s] instead of [%s]', sample, result, form));
+              `FORM FAILED: input = ${sample}, returned [${result}] instead of [${form}]`);
 
             result = p.ordinal.indexOf(loc, sample);
             f_idx  = p.ordinal.forms(loc).indexOf(form);
             assert.equal(result, f_idx,
-              format('INDEX FAILED: input = %s, returned [%s] instead of [%s]', sample, result, f_idx));
+              `INDEX FAILED: input = ${sample}, returned [${result}] instead of [${f_idx}]`);
           });
         });
       });

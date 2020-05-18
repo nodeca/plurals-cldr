@@ -2,6 +2,8 @@
 
 'use strict';
 
+/* eslint-env es6 */
+
 const fs     = require('fs');
 const path   = require('path');
 
@@ -31,15 +33,16 @@ function renameKeys(rules) {
 // Create array of sample values for single range
 // 5~16, 0.04~0.09. Both string & integer forms (when possible)
 function fillRange(value) {
-  let start = value.split('~')[0];
-  let end   = value.split('~')[1];
+  let [ start, end ] = value.split('~');
 
   let decimals = (start.split('.')[1] || '').length;
   let mult = Math.pow(10, decimals);
 
-  let range = _.range(start * mult, end * mult + 1)
+  let range = Array(end * mult - start * mult + 1).fill()
+    .map((v, idx) => ((idx + start * mult) / mult))
     // round errors to required decimal precision
-    .map(val => (val / mult).toFixed(decimals));
+    .map(v => v.toFixed(decimals));
+
 
   let last = range[range.length - 1];
 
@@ -105,8 +108,7 @@ function toSingleRule(str) {
         // simple value
         if (interval.indexOf('..') < 0) return `${v} ${cond} ${interval}`;
         // range
-        let start = interval.split('..')[0],
-            end   = interval.split('..')[1];
+        let [ start, end ] = interval.split('..');
         if (cond === '=') return `B(${start}, ${end}, ${v})`;
 
         return `!B(${start}, ${end}, ${v})`;
@@ -150,12 +152,12 @@ function createLocaleFn(rules) {
     condition += `${toSingleRule(rule)} ? ${idx} : `;
   });
 
-  let shortcuts = _.uniq(condition.match(/[nivwft]\d+/g) || [])
+  let shortcuts = [ ...new Set(condition.match(/[nivwft]\d+/g) || []) ] // unique
     .map(sh => `${sh} = ${sh[0]} % ${sh.slice(1)}`)
     .join(', ');
 
-  let pmax = _.max(
-    'nivftw'.split('').map((p, idx) => condition.indexOf(p) < 0 ? -1 : idx)
+  let pmax = Math.max(
+    ...('nivftw'.split('').map((p, idx) => condition.indexOf(p) < 0 ? -1 : idx))
   ) + 1;
 
   let fn = _.template(FN_TPL)({
@@ -196,7 +198,7 @@ let test = {
 };
 
 // Parse plural rules
-_.forEach(cardinals.supplemental['plurals-type-cardinal'], (ruleset, loc) => {
+Object.entries(cardinals.supplemental['plurals-type-cardinal']).forEach(([ loc, ruleset ]) => {
   let rules = renameKeys(ruleset);
 
   compiled[loc.toLowerCase()] = createLocaleFn(rules);
@@ -204,7 +206,7 @@ _.forEach(cardinals.supplemental['plurals-type-cardinal'], (ruleset, loc) => {
 });
 
 // Parse ordinal rules
-_.forEach(ordinals.supplemental['plurals-type-ordinal'], (ruleset, loc) => {
+Object.entries(ordinals.supplemental['plurals-type-ordinal']).forEach(([ loc, ruleset ]) => {
   let rules = renameKeys(ruleset);
 
   let res = createLocaleFn(rules);
@@ -221,7 +223,7 @@ _.forEach(ordinals.supplemental['plurals-type-ordinal'], (ruleset, loc) => {
 // Collapse locales with the same rules
 let reduced = {};
 
-_.forEach(compiled, (data, loc) => {
+Object.entries(compiled).forEach(([ loc, data ]) => {
   // calculate unique key;
   let uniq = data.cFn + data.oFn;
 
@@ -235,7 +237,7 @@ _.forEach(compiled, (data, loc) => {
   }
 });
 
-reduced = _.map(reduced,  set => set);
+reduced = Object.values(reduced);
 
 
 // Write code & fixture
