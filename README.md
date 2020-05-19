@@ -21,17 +21,12 @@ __node.js:__
 $ npm install plurals-cldr
 ```
 
-__browser:__
-
-```bash
-$ bower install plurals-cldr
-```
 
 ### Rebuild
 
 ```bash
-make clean
-make generate
+npm run clean
+npm run build
 ```
 
 ### API

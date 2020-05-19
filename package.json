@@ -20,16 +20,27 @@
     "dist/"
   ],
   "scripts": {
-    "test": "make test"
+    "lint": "eslint .",
+    "test": "npm run lint && nyc mocha",
+    "coverage": "npm run test && nyc report --reporter html",
+    "report-coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "clean": "shx rm -rf node_modules/cldr-data && npm install",
+    "generate": "node support/generate.js",
+    "browserify": "browserify -r ./ -s plurals-cldr -p [ browserify-header --file support/header.js ] > dist/plurals-cldr.js",
+    "minify": "terser dist/plurals-cldr.js -c -m > dist/plurals-cldr.min.js",
+    "build": "npm run generate && npm test && npm run browserify && npm run minify"
   },
   "devDependencies": {
     "browserify": "^16.5.1",
+    "browserify-header": "^1.0.1",
     "cldr-data": "^36.0.0",
     "coveralls": "^3.1.0",
     "eslint": "^7.0.0",
-    "istanbul": "^0.4.5",
     "lodash": "^4.16.6",
     "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
+    "shelljs": "^0.8.4",
+    "shx": "^0.3.2",
     "terser": "^4.6.13"
   }
 }
