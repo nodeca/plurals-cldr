@@ -28,6 +28,8 @@ function forms(loc) {
   return s[l] ? s[l].c : null;
 }
 
+var c_re = /c\d+$/;
+
 function indexOf(loc, value) {
   var l = normalize(loc);
   if (!l) {
@@ -38,14 +40,24 @@ function indexOf(loc, value) {
     return 0;
   }
 
-  var sval  = String(value),
-      f = sval.indexOf('.') < 0 ? '' : sval.split('.')[1],
-      v = f.length,
-      n = +value,
-      i = +(sval.split('.')[0]),
-      t = f.length === 0 ? 0 : +f.replace(/0+$/, '');
+  var sval  = String(value);
+  var e = 0;
 
-  return s[l].cFn(n, i, v, +f, t);
+  if (c_re.test(sval)) {
+    var spl = sval.split('c');
+    e = +spl[1];
+    value = Math.pow(10, e) * spl[0];
+    sval = String(value);
+  }
+
+  var f = sval.indexOf('.') < 0 ? '' : sval.split('.')[1];
+  var v = f.length;
+  var w = f.replace(/0+$/, '').length;
+  var n = +value;
+  var i = +(sval.split('.')[0]);
+  var t = f.length === 0 ? 0 : +f.replace(/0+$/, '');
+
+  return s[l].cFn(n, i, v, +f, t, w, e);
 }
 
 function plural(loc, value) {
@@ -72,14 +84,24 @@ function o_indexOf(loc, value) {
     return 0;
   }
 
-  var sval  = String(value),
-      f = sval.indexOf('.') < 0 ? '' : sval.split('.')[1],
-      v = f.length,
-      n = +value,
-      i = +(sval.split('.')[0]),
-      t = f.length === 0 ? 0 : +f.replace(/0+$/, '');
+  var sval  = String(value);
+  var e = 0;
 
-  return s[l].oFn(n, i, v, +f, t);
+  if (c_re.test(sval)) {
+    var spl = sval.split('c');
+    e = +spl[1];
+    value = Math.pow(10, e) * spl[0];
+    sval = String(value);
+  }
+
+  var f = sval.indexOf('.') < 0 ? '' : sval.split('.')[1];
+  var v = f.length;
+  var w = f.replace(/0+$/, '').length;
+  var n = +value;
+  var i = +(sval.split('.')[0]);
+  var t = f.length === 0 ? 0 : +f.replace(/0+$/, '');
+
+  return s[l].oFn(n, i, v, +f, t, w, e);
 }
 
 function ordinal(loc, value) {

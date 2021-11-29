@@ -82,8 +82,8 @@ describe('api', function () {
   });
 
   it('should normalize locales', function () {
-    assert.deepEqual(p.forms('pt-PT'), [ 'one', 'other' ]);
-    assert.deepEqual(p.forms('pt-PPPP'), [ 'one', 'other' ]);
-    assert.deepEqual(p.forms('pt_PPPP'), [ 'one', 'other' ]);
+    assert.deepEqual(p.forms('pt-PT'), [ 'one', 'many', 'other' ]);
+    assert.deepEqual(p.forms('pt-PPPP'), [ 'one', 'many', 'other' ]);
+    assert.deepEqual(p.forms('pt_PPPP'), [ 'one', 'many', 'other' ]);
   });
 });

@@ -8,10 +8,9 @@ const fs     = require('fs');
 const path   = require('path');
 
 const _    = require('lodash');
-const cldr = require('cldr-data');
 
-const cardinals = cldr('supplemental/plurals');
-const ordinals  = cldr('supplemental/ordinals');
+const cardinals = require('cldr-core/supplemental/plurals.json');
+const ordinals  = require('cldr-core/supplemental/ordinals.json');
 
 const version   = cardinals.supplemental.version;
 
@@ -93,9 +92,9 @@ function toSingleRule(str) {
 
   return str
     // replace modulus with shortcuts
-    .replace(/([nivwft]) % (\d+)/g, '$1$2')
+    .replace(/([nivwfte]) % (\d+)/g, '$1$2')
     // replace ranges
-    .replace(/([nivwft]\d*) (=|\!=) (\d+[.,][.,\d]+)/g, (match, v, cond, range) => {
+    .replace(/([nivwfte]\d*) (=|\!=) (\d+[.,][.,\d]+)/g, (match, v, cond, range) => {
       // range = 5,8,9 (simple set)
       if (range.indexOf('..') < 0 && range.indexOf(',') >= 0) {
         if (cond === '=') {
@@ -152,16 +151,16 @@ function createLocaleFn(rules) {
     condition += `${toSingleRule(rule)} ? ${idx} : `;
   });
 
-  let shortcuts = [ ...new Set(condition.match(/[nivwft]\d+/g) || []) ] // unique
+  let shortcuts = [ ...new Set(condition.match(/[nivwfte]\d+/g) || []) ] // unique
     .map(sh => `${sh} = ${sh[0]} % ${sh.slice(1)}`)
     .join(', ');
 
   let pmax = Math.max(
-    ...('nivftw'.split('').map((p, idx) => condition.indexOf(p) < 0 ? -1 : idx))
+    ...('nivftwe'.split('').map((p, idx) => condition.indexOf(p) < 0 ? -1 : idx))
   ) + 1;
 
   let fn = _.template(FN_TPL)({
-    params: 'nivftw'.slice(0, pmax).split('').join(', '),
+    params: 'nivftwe'.slice(0, pmax).split('').join(', '),
     shortcuts: shortcuts,
     condition: condition
   });
