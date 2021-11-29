@@ -87,12 +87,14 @@ function o_indexOf(loc, value) {
   var sval  = String(value);
   var e = 0;
 
+  /* Unused in ordinals now
   if (c_re.test(sval)) {
     var spl = sval.split('c');
     e = +spl[1];
     value = Math.pow(10, e) * spl[0];
     sval = String(value);
   }
+  */
 
   var f = sval.indexOf('.') < 0 ? '' : sval.split('.')[1];
   var v = f.length;
