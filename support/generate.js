@@ -2,8 +2,6 @@
 
 'use strict';
 
-/* eslint-env es6 */
-
 const fs     = require('fs');
 const path   = require('path');
 
