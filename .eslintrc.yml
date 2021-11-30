@@ -6,6 +6,7 @@ env:
 ignorePatterns:
   - dist/
   - coverage/
+  - rollup.config.js
 
 rules:
   accessor-pairs:         2
