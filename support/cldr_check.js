@@ -32,7 +32,7 @@ async function run() {
   const current = JSON.parse(res.stdout).dependencies['cldr-core'].version;
 
   if (current === latest) {
-    console.log(`CLDR version is latest (${latest}), no update required`);
+    console.log(`CLDR version is up to date (${latest}), no update required`);
     return;
   }
 

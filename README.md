@@ -77,14 +77,9 @@ The same as above, but for ordinal forms.
 
 ### Update CLDR version (for developers)
 
-You need to bump `cldr-core` version & run rebuild:
-
 ```sh
-npm install cldr-core@latest --save-dev
-rm package-lock.json
-rm -rf node_modules
-npm install
-npm run build
+npm run cldr-check
+npm run cldr-update
 ```
 
 

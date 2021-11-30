@@ -26,7 +26,8 @@
     "generate": "node support/generate.js",
     "browserify": "rollup -c support/rollup.config.js",
     "build": "npm run generate && npm test && npm run browserify",
-    "cldr-check": "./support/cldr_check.js"
+    "cldr-check": "node support/cldr_check.js",
+    "cldr-update": "node support/cldr_update.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
