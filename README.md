@@ -9,13 +9,17 @@ Key benefits:
 
 - Competely automated code generation from CLDR on update.
 - Generated code automatically tested with CLDR fixtures.
-- Both `cardinal` and `ordinal` forms support.
+- Both `cardinal` and `ordinal` forms supported.
 - Rules for all languages are stored in single file in very compact form.
 
 
-### Installation
+### Note
 
-__node.js:__
+If you wish more high abstraction level of i18n support, see
+[babelfish](https://github.com/nodeca/babelfish).
+
+
+### Installation
 
 ```bash
 $ npm install plurals-cldr
@@ -31,7 +35,7 @@ tailing decimal zeros. If locale not supported, returns `null`.
 
 
 ```js
-var plural = require('plural-cldr');
+var plural = require('plurals-cldr');
 
 // Get cardinal form name
 //
