@@ -23,7 +23,6 @@
     "lint": "eslint .",
     "test": "npm run lint && nyc mocha",
     "covreport": "nyc report --reporter html && nyc report --reporter lcov",
-    "clean": "shx rm -rf node_modules/cldr-data && npm install",
     "generate": "node support/generate.js",
     "browserify": "browserify -r ./ -s plurals-cldr -p [ browserify-header --file support/header.js ] > dist/plurals-cldr.js",
     "minify": "terser dist/plurals-cldr.js -c -m > dist/plurals-cldr.min.js",
@@ -37,8 +36,6 @@
     "lodash": "^4.16.6",
     "mocha": "^9.1.3",
     "nyc": "^15.0.1",
-    "shelljs": "^0.8.4",
-    "shx": "^0.3.2",
     "terser": "^5.10.0"
   }
 }
