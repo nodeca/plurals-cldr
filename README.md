@@ -22,13 +22,6 @@ $ npm install plurals-cldr
 ```
 
 
-### Rebuild
-
-```bash
-npm run clean
-npm run build
-```
-
 ### API
 
 #### .(locale, number)
@@ -78,13 +71,21 @@ Order of forms is the same for all languages: `zero`, `one`, `two`, `few`,
 The same as above, but for ordinal forms.
 
 
+### Update CLDR version (for developers)
+
+You need to bump `cldr-core` version & run rebuild:
+
+```sh
+npm install cldr-core@latest --save-dev
+rm package-lock.json
+rm -rf node_modules
+npm install
+npm run build
+```
+
+
 ### References
 
 1. [CLDR downloads](http://cldr.unicode.org/index/downloads)
 2. [Latest chart](http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html)
 3. [Syntax description](http://www.unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules)
-
-
-### License
-
-[Mit](https://github.com/nodeca/plurals-cldr/blob/master/LICENSE).

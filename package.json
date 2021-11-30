@@ -1,7 +1,7 @@
 {
   "name": "plurals-cldr",
   "version": "2.0.0",
-  "description": "Plurals suport, generated from CLDR.",
+  "description": "Plurals support, generated from CLDR.",
   "keywords": [
     "i18n",
     "l10n",
@@ -9,7 +9,7 @@
     "plurals",
     "pluralize",
     "pluralizer",
-    "clrd",
+    "cldr",
     "ldml"
   ],
   "author": "Vitaly Puzrin (https://github.com/puzrin)",
